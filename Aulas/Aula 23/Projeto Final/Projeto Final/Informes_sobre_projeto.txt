@@ -1,0 +1,4 @@
+Olá Professor,
+Esse arquivo contém as coisas nas quais não consegui implementar no projeto, desde já agradeço por toda a ajuda
+e perço desculpas pelo trabalho, vamos lá!!!
+Bem de maneira geral a aplicação funciona porém a inserção de arquivos deve ser manual pois apesar da funcionalidade de inserir está funcionando, a variavel que é chamada para instanciar um novo dataframe, acaba não sendo modificada ao longo do processo, o contador de videos tão ficou de maneira estatica dessa forma também não funcionando corretamente.

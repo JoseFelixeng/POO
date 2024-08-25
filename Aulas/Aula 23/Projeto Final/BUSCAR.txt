@@ -1,0 +1,11 @@
+        try:
+            r = self._model.obtem_dados_filme(self.view.self._inicializa._vars.self._titulo.get(),self.view.self._inicializa._vars.self._canal.get(),
+                                             self.view.self._inicializa._vars.self._data_i.get(), self.view.self._inicializa._vars.self._data_f.get(),
+                                             self.view.self._inicializa._vars.self._categ.get())
+        except ExcInfo1Invalida as err:
+            mb.showerror('Busca', str(err))
+        except ExcInfo2Invalida as err:
+            mb.showerror('Busca', str(err))
+        else:
+            
+            mb.showinfo('Busca', 'Busca realizada com sucesso')

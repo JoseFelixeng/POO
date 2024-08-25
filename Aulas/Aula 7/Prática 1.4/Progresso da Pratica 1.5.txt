@@ -1,0 +1,30 @@
+Andamento da pratica 1.5
+
+Classe Musica 
+Atributos:
+
+artista, tipo str, privado
+titulo, tipo str, privado
+Métodos:
+
+__init__: recebe como parâmetro o artista e o título da música OK
+__str__: imprime a música no formato Artista - Musica OK 
+
+--------------------------------------------------------------------------------------OK---------------------------------------------------------------------
+
+Classe Playlist
+Atributos:
+
+musicas: agregação de objetos da classe Musica mantida em uma list ok
+Métodos:
+
+__init__: recebe como parâmetro uma list de objetos da classe Music OK
+imprime: imprime todas as músicas da playlist *
+adiciona: adiciona uma música como última a ser tocada na playlist  ok 
+toca_proxima: toca a próxima música da playlist e a remove da playlist ok
+embaralha: embaralha a playlist utilizando a função shuffle do módulo random da biblioteca padrão 
+Observe na célula a seguir como utilizar o shuffle.ok
+
+-------------------------------------------------------------------------------------  -------------------------------------------------------------------------
+
+
