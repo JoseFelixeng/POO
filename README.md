@@ -19,14 +19,14 @@ Para criar um arquivo python é muito simples, caso utilizo o sistema operaciona
 
 1 - 
 
-![](/home/felix/snap/marktext/9/.config/marktext/images/2024-11-27-16-49-05-image.png)
+![](/POO/img/1.png)
 
 2 - 
 
-![](/home/felix/snap/marktext/9/.config/marktext/images/2024-11-27-16-49-39-image.png)
+![](/POO/img/2.png)
 
 3 - 
 
-![](/home/felix/snap/marktext/9/.config/marktext/images/2024-11-27-16-52-38-image.png)
+![](/POO/img/3.png)
 
 
