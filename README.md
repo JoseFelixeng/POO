@@ -19,14 +19,14 @@ Para criar um arquivo python é muito simples, caso utilizo o sistema operaciona
 
 1 - 
 
-![](/POO/img/1.png)
+![imagem 1](./img/1.png)
 
 2 - 
 
-![](/POO/img/2.png)
+![imagem 2](./img/2.png)
 
 3 - 
 
-![](/POO/img/3.png)
+![imagem 3](./img/3.png)
 
 
