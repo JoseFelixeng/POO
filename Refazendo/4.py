@@ -3,25 +3,42 @@
 # é composta apenas de números 0s ou 1s, com a mensagem "sequência no padrão" ou com a
 # ensagem "sequência não está no padrão", caso algum dos números digitados não seja 0 nem 1
 
-n = int(input('Digite a entrada'))
 
-def test_seq(n: int) -> int:
-    seq = 0
-    cont = 0
-    for i in range(0, n):
-        seq = int(input('digite um número:'))
+class Entrada:
+    '''para ser usada para testa a sequencia'''
 
-        if seq !=0 and seq !=1:
-            cont = cont + 1
+    def __init__(self, n):
+        self.n = n
+        self.cont = 0
+        self.seq = 0
+        self.test = True
 
 
-    return cont
+    def test_seq(self):
 
-num = test_seq(n)
+        for i in range(0, self.n):
+            self.seq = int(input('digite um número:'))
 
-if num == 0:
-    print('sequência no padrão')
-elif num > 0:
-    print('sequência não esta no padrão')
-else:
-    print('sequência digitada')
+            if self.seq !=0 and self.seq !=1:
+                self.cont = self.cont + 1
+
+    def padrao(self):
+        if self.cont == 0:
+            self.test = True
+        else:
+            self.test = False
+
+    def __str__(self):
+        if self.test == True:
+            return  'sequencia padrão'
+        else:
+            return 'sequência não está no padrão'
+
+if __name__ == "__main__":
+    n = int(input('Digite a entrada'))
+
+    num = Entrada(n)
+    num.test_seq()
+    num.padrao()
+    print(num)
+
