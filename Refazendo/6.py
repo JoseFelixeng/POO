@@ -27,17 +27,48 @@ Antes de escrever código, reflita:
 class Maquina_cafe:
     '''Classe irá descrever uma maquina de café'''
 
-    def __init__(self, moeda):
+    def __init__(self):
         '''Inicializaçõa da classe'''
-        self.__moeda = moeda
+
+        self.__moeda = 0
         self.__valor = 50
-        self.__totalPago = 0
         self.__cd = False
+        self.__troco = 0
 
     def __str__(self):
         '''Interface de Saída'''
-        return '{} c. (faltam {} c'.format(self.__moeda, self.__totalPago)
+        return 'Voce inseriu {} c. (troco {} c)'.format(self.__moeda, self.__moeda - self.__valor)
 
+    def pagamento(self):
+        while(self.__moeda < self.__valor):
+
+            inserida = int(input('insira uma moeda para receber o café \n'))
+
+            if inserida == 5 or inserida == 10:
+                self.__moeda += inserida
+                print('{} c (faltam {} c)'.format(inserida, self.__valor -self.__moeda))
+            else:
+                print('Erro por favor insira uma moeda correta \n')
+
+
+    def solta_cafe(self):
+        if self.__moeda == self.__valor or self.__valor < self.__moeda:
+            print('=====================')
+            print('Café Disponível')
+            print('=====================')
+
+
+    def troco(self):
+        if self.__moeda > self.__valor:
+            self.__troco = self.__moeda - self.__valor
+            return self.__troco
+        else:
+            print('Você não possui troco\n')
 
 
 if __name__ == "__main__":
+    m = Maquina_cafe()
+    m.pagamento()
+    m.solta_cafe()
+    m.troco()
+    print(m)
