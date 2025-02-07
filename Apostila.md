@@ -552,3 +552,337 @@ if __name__ == "__main__":
 ```
 
 Agora com o visto até o momento refaça os exemplos anteriores e também os novos aplicando os conhecimentos adquiridos até o momento.
+
+# Aula - Encapsulamento
+
+## Motivação para encapsulamento
+
+Considere o exemplo da classe `Estacionamento`, apresentada na aula.
+Podemos definir a classe `Estacionamento` como a seguir.
+
+```python
+class Estacionamento:
+    '''Estacionamento controlando o número de vagas'''
+    
+    def __init__(self, capacidade):
+        '''Inicializa a capacidade e o número de vagas = capacidade'''
+        self.capacidade = capacidade # este valor não muda
+        self.vagas = capacidade # número de vagas livres
+        
+    def entrada(self):
+        '''Registra entrada de um carro'''
+        if self.vagas > 0: # verifica espaço disponível
+            self.vagas -= 1 # uma vaga a menos
+            print("Um carro entrou.")
+        else:
+            print("Estacionamento sem vagas... o carro não pode entrar")
+            
+    def saida(self):
+        '''Registra saída de um carro'''
+        if self.vagas < self.capacidade: # devemos ter pelo menos um carro dentro
+            self.vagas += 1 # incrementa o número de vagas
+            print("Um carro saiu")
+        else:
+            print("Estacionamento vazio... sem carros para sair")
+            
+    def comVagas(self):
+        '''Determina se existem vagas disponíveis '''
+        return self.vagas > 0
+    
+    def lotado(self):
+        '''Testa se o estacionamento está lotado'''
+        return self.vagas == 0
+    
+    def vazio(self):
+        '''Determina se o estacionamento está vazio'''
+        return self.vagas == self.capacidade
+            
+    def __str__(self):
+        '''Converte um Estacionamento em String'''
+        return '{} / {} vagas disponíveis.'.format(self.vagas, self.capacidade)
+```
+
+```python
+est = Estacionamento(5)
+print(est.vazio())
+est.saida()  
+est.entrada()
+est.entrada()
+est.entrada()
+est.entrada()
+est.entrada()
+print(est)
+est.saida()
+print(est)
+```
+
+Entretanto, observe que nada impede que o usuário da classe `Estacionamento` (programador que está utilizando a classe, não usuário do sistema final) acesse os atributos diretamente, sem utilizar os métodos implementados para manipular objetos da classe.
+
+Veja o código a seguir.
+
+```python
+# isto não deveria ser possível:
+# acessar diretamente o atributo vagas pode levar a um estado inconsistente do sistema! 
+# por exemplo, não teríamos como garantir que vagas <= capacidade. 
+est.vagas += 100
+print(est)
+```
+
+Os modificadores de acesso em Python funcionam assim:
+
+- **Público**: Todo membro/método é público por padrão
+- **Privado**: O membro/método se torna privado ao ser declarado com dois underscores `"_"` (**dunders**) na frente do seu nome.
+
+Considere uma segunda versão da classe `Estacionamento` que declara como privados os dois atributos (capacidade e vagas), mostrada a seguir.
+
+```python
+class Estacionamento:
+    '''Estacionamento controlando o número de vagas'''
+    
+    def __init__(self, capacidade):
+        '''Inicializa a capacidade e o número de vagas = capacidade'''
+        
+        # note o uso de __ no identificador do atributo
+        self.__capacidade = capacidade
+        self.__vagas = capacidade
+        
+    def entrada(self):
+        '''Registra entrada de um carro'''
+        if self.__vagas > 0:
+            self.__vagas -= 1
+            print("Um carro entrou.")
+        else:
+            print("Estacionamento sem vagas")
+            
+    def saida(self):
+        '''Registra saída de um carro'''
+        if self.__vagas < self.__capacidade:
+            self.__vagas += 1
+            print("Um carro saiu")
+        else:
+            print("Estacionamento vacío")
+            
+    def comVagas(self):
+        '''Determina se existem vagas disponíveis '''
+        return self.__vagas > 0
+    
+    def lotado(self):
+        '''Testa se o estacionamento está lotado'''
+        return self.__vagas == 0
+    
+    def vazio(self):
+        '''Determina se o estacionamento está vazio'''
+        return self.__vagas == self.__capacidade
+    
+    def __str__(self):
+        '''Converte um Estacionamento em String'''
+        return '{} / {} vagas disponíveis.'.format(self.__vagas, self.__capacidade)
+    
+    
+```
+
+Agora os usuários da classe não podem acessar diretamente os atributos "privados" da classe.
+
+```python
+e = Estacionamento(50)
+print(e)
+print(e.vazio())
+e.entrada()
+e.entrada()
+print(e)
+```
+
+```python
+# python detecta o acesso e emite um erro
+print(e.__vagas)
+```
+
+![image.png](attachment:6091e6de-2e85-48ec-912e-2f19b405839f:image.png)
+
+```python
+### 1.2 Acessando/Chamando Atributos e Métodos Privados em Python Fora da Classe
+
+Em Python, sempre é possível acessar os atributos (privados ou não) da classe. 
+Para isto, basta utilizar a sintaxe `<obj>._<nomeDaClasse__nomeDoAtributo>.`
+```
+
+```python
+# truque Python para acessar atributos "privados"
+e._Estacionamento__vagas
+```
+
+Resumidamente:
+
+- **Nenhum bom programador Python deve acessar/modificar um**
+    - Em outras palavras, se o atributo está sinalizado como privado, significa que usuários daquela classe não devem acessá-lo diretamente
+    - Python segue uma filosofia que diz que **"programadores são adultos e sabem o que fazem"**
+- O encapsulamento permite especificar a **interface pública** da classe
+    - Interface pública: parte exposta da classe para quem vai utilizá-la (ela possui outras partes não expostas que compõem a sua implementação)
+    - Esconder a sua implementação $\equiv$ encapsular
+    - Na classe Estacionamento, os métodos `entrada` e `saida` devem ser utilizados para alterar o valor de `__vagas`
+
+## Getters / Setters
+
+Uma vez que os atributos privados de uma classe só podem ser acessados de dentro da classe, torna-se útil utilizar métodos `getters/setters` para acessar/atribuir novos valores a estes atributos através de métodos:
+
+- Métodos `getters`: retornam o valor de um atributo
+- Métodos `setters`: atribuem um novo valor para um atributo
+
+Observe a seguir um exemplo de uso de getters/setters.
+
+```python
+class ContaBancaria:
+    '''
+    Uma conta bancária com saldo e titular.
+    Set/get definidos para o titular
+    Get definido para o saldo
+    '''
+    
+    def __init__(self, titular):
+        '''Saldo e titular (os dois privados)'''
+        self.__titular = titular
+        self.__saldo = 0
+        
+    def __str__(self):
+        return '{0}: ${1}.'.format(self.__titular , self.__saldo)
+    
+    def getSaldo(self):
+        '''retorna o saldo'''
+        return self.__saldo
+    
+    def getTitular(self):
+        '''retorna o titular'''
+        return self.__titular
+    
+    def setTitular(self, novo_titular):
+        '''Muda o titular da conta'''
+        self.__titular = novo_titular
+        
+    def deposito(self, valor):
+        '''Realiza deposito de um valor'''
+        self.__saldo += valor
+```
+
+Podemos utilizar os métodos `set` e `get` da classe para acessar, de maneira controlada, os atributos da classe
+
+```python
+c = ContaBancaria("pedro")
+c.deposito(1000)
+print(c)
+print(c.getSaldo())
+c.setTitular("joão")
+print(c)
+print(c.getTitular())
+```
+
+Setters/Getters em Python:
+
+- Os métodos `set` podem ser muito úteis para validar os novos valores dos atributos. Por exemplo, poderíamos exigir que o novo titular (um objeto do tipo Pessoa e não simplesmente uma string) deve possuir um CPF.
+- Esta convenção de getters/setters é fortemente utilizada em Java
+- Em Python, ela deve ser utilizada quando necessária. Motivos:
+    - Mais código, por exemplo, `print(c.x)` vs `print(c.getX())` (lembre... o Zen de Python... *Beautiful is better than ugly*).
+    - É possível burlar o acesso privado à classe, tornando estes métodos inúteis
+
+## Properties: A forma "pythônica" para getters e setters
+
+Existe uma forma mais elegante, eficiente e automática de se utilizar getters/setters em Python: uso da função `property`.
+
+Observe a nova versão da classe `ContaBancaria` a seguir.
+
+```python
+class ContaBancaria:
+    
+    def __init__(self, titular):
+        self.__titular = titular
+        self.__saldo = 0
+        
+    def __str__(self):
+        return '{0}: ${1}.'.format(self.__titular , self.__saldo)
+    
+    def getSaldo(self):
+        '''retorna o saldo'''
+        print('Método getSaldo ')
+        return self.__saldo
+    
+    def getTitular(self):
+        '''retorna o titular'''
+        print('Método getTitular')
+        return self.__titular
+    
+    def setTitular(self, novo_titular):
+        '''muda o titular da conta'''
+        print('Método setTitular')
+        self.__titular = novo_titular
+        
+    def deposita(self, valor):
+        '''Deposita valor'''
+        self.__saldo += valor
+    
+    # ainda dentro do escopo da classe
+    titular = property(getTitular, setTitular)
+    saldo = property(getSaldo)
+```
+
+```python
+c1 = ContaBancaria("joao")
+c1.deposita(2000)
+print(c1.saldo) # saldo é um método "disfarçado" (acesso a um atributo que realiza uma chamada a um método)
+print(c1.titular)
+c1.titular = "jose"
+#c1.saldo = 4  Erro!
+print(c1)
+```
+
+### Decoradores em Python
+
+Uma alternativa ainda mais interessante é definir setters e getters utilizando **decoradores**.
+
+```python
+class ContaBancaria:
+    
+    def __init__(self, titular):
+        self.__titular = titular
+        self.__saldo = 0
+        
+    def __str__(self):
+        return '{0}: ${1}.'.format(self.__titular , self.__saldo)
+    
+    @property
+    def saldo(self):
+        '''retorna o saldo'''
+        print('Método getSaldo ')
+        return self.__saldo
+
+    @property
+    def titular(self):
+        '''retorna o titular'''
+        print('Método getTitular')
+        return self.__titular
+    
+    @titular.setter
+    def titular(self, novo_titular): # observe que na verdade estamos redefinindo o método anterior. isso é possível com o uso de property 
+        '''Muda o titular da conta'''
+        print('Método setTitular')
+        self.__titular = novo_titular
+        
+    def depositar(self, valor):
+        '''Depositar valor'''
+        self.__saldo += valor
+```
+
+```python
+c1 = ContaBancaria("joao")
+c1.depositar(2000)
+print(c1.saldo) # chama o getter de saldo
+print(c1.titular) # chama o getter de titular
+c1.titular = "jose" # chama o setter de titular
+#c1.saldo = 4 # erro! saldo não tem setter
+print(c1)
+```
+
+Note que:
+
+- O atributo privado titular possui um setter e getter.
+- O atributo saldo só possui um getter (retornando o saldo atual)
+- `@property` define o getter
+- `@<atributo>.setter` define o setter (como no exemplo `@titular.setter`)
