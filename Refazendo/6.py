@@ -27,28 +27,44 @@ Antes de escrever código, reflita:
 class Maquina_cafe:
     '''Classe irá descrever uma maquina de café'''
 
-    def __init__(self):
+    def __init__(self, valor=50):
         '''Inicializaçõa da classe'''
 
         self.__moeda = 0
-        self.__valor = 50
+        self.__valor = valor
         self.__cd = False
         self.__troco = 0
+        self.__inserida = 0
 
     def __str__(self):
         '''Interface de Saída'''
         return 'Voce inseriu {} c. (troco {} c)'.format(self.__moeda, self.__moeda - self.__valor)
 
+    @property
+    def inserida(self):
+        '''Usado para retorna o valor inserido'''
+        return self.__inserida
+
+    @property
+    def moeda(self):
+        '''Moeda'''
+        return  self.__moeda
+
+    @property
+    def troco(self):
+        return  self.__troco
+
     def pagamento(self):
         while(self.__moeda < self.__valor):
 
-            inserida = int(input('insira uma moeda para receber o café \n'))
+            self.__inserida = int(input('insira uma moeda para receber o café \n'))
 
-            if inserida == 5 or inserida == 10:
-                self.__moeda += inserida
-                print('{} c (faltam {} c)'.format(inserida, self.__valor -self.__moeda))
+            if self.__inserida in (5, 10):
+                self.__moeda += self.__inserida
+                print('{} c (faltam {} c)'.format(self.__inserida, self.__valor - self.__moeda))
             else:
                 print('Erro por favor insira uma moeda correta \n')
+        return self.__inserida
 
 
     def solta_cafe(self):
