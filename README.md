@@ -886,3 +886,356 @@ Note que:
 - O atributo saldo só possui um getter (retornando o saldo atual)
 - `@property` define o getter
 - `@<atributo>.setter` define o setter (como no exemplo `@titular.setter`)
+
+
+# Aula - Estruturas de Dados da Biblioteca Padrão Python
+
+As classes a seguir, que representam **sequências** em Python (`tuple`, `list` e `str`), possuem um conjunto de operações bem definido na sua interface pública.
+
+## 1. Tuplas
+
+- Utilizadas para guardar vários valores agrupados
+    - Observe que em Python os valores são objetos e como tudo é objeto em Python, uma tupla pode armazenar qualquer coisa
+- Definidas pela especificação de vários elementos separados por vírgula entre parênteses `()`
+- Exemplos:
+    - Tupla de inteiros: `a = (1,2,3)`
+    - Tupla de strings: `b = ('alo','mundo')`
+    - Tupla mista: `c = ((1, 'cálculo',10), (2, 'álgebra', 9))`
+- Uma tupla não é alterável: uma vez definida, ela não pode ser alterada
+
+Observe como se trabalha com tuplas em Python a seguir.
+
+```python
+l = ('alo', 3, ('e', 'f')) # declara uma tupla
+print(type(l)) # tuple
+x = l[0] # acessa o primeiro elemento da tupla
+y = l[1] # acessa o segundo elemento da tupla
+print(x,y)
+
+# "desempacota" (unpack) tupla: atribui tupla a um número de valores (deve ser igual ao tamanho da tupla)
+x,y,z = l
+print(x,y,z)
+
+# tuplas são imutáveis: não é possível adicionar, remover ou alterar elementos
+#l[0] = 'mundo' # erro
+
+# toda função que retorna mais de um valor em Python
+# na verdade retorna uma tupla com todos os valores.
+
+def sumprod(x, y):
+    '''Retorna a soma e o produto de um número'''
+    return (x+y, x*y)
+
+if __name__ == "__main__":
+
+    # duas formas equivalentes de atribuição de tuplas
+    
+    # forma 1: atribui em a o primeiro resultado e em b o segundo
+    a,b = sumprod(3,5)
+    print('Soma: {}, produto: {}'.format(a, b))
+
+    # forma 2: atribui o resultado a uma tupla
+    t = sumprod(3,5)
+    print('Soma: {}, produto: {}'.format(t[0], t[1]))
+```
+
+## 2. Listas
+
+- Utilizadas para guardar uma coleção de valores que pode ser alterada
+- Definidas pela especificação de vários elementos separados por vírgula entre colchetes `[]`
+- Exemplos:
+    - Lista de inteiros: `a = [1,2,3]`
+    - Lista de strings: `b = ['alo','mundo']`
+    - Lista mista: `c = [1.93, 'alo', (0,'aula')]`
+
+Observe como se trabalha com listas em Python a seguir.
+
+```python
+l = ['alo', 3, ('e', 'f')] # declara uma lista
+print(type(l)) # list
+x = l[0] # acessa o primeiro elemento da lista
+y = l[1] # acessa o segundo elemento da lista
+print(x,y)
+
+# "desempacota" (unpack) lista: atribui lista a um número de valores (deve ser igual ao tamanho da lista)
+x,y,z = l
+print(x,y,z)
+
+# listas são mutáveis: é possível adicionar, remover ou alterar elementos
+l[0] = 'mundo'
+print(l)
+```
+
+Listas em Python possuem outras operações, definidas na interface pública da classe (digite `help(list)` em um terminal para mais detalhes):
+
+- `append`: adiciona objeto ao final da lista
+- `insert`: adiciona objeto em posição específica da lista
+- `remove`: remove primeira ocorrência do parâmetro passado
+- `extend`: adiciona todos os objetos do parâmetro
+- `clear`: remove todos os objetos
+- `pop`: remove o último objeto ou objeto na posição do parâmetro
+- `sort`: ordena a lista
+- `copy`: retorna uma cópia da lista
+- `count`: retorna quantos objetos são iguais ao parâmetro
+
+```python
+l = [] # cria lista vazia
+l.append(1)
+print(l)
+l2 = [2,3,4]
+l.extend(l2) # adiciona os elementos de l2 em l
+print(l)
+l3 = l + l # operador de soma concatena listas
+print(l3)
+l = [1,3]
+l.insert(1,2) # insere o número 2 na posição 1
+print(l)
+l.clear() # remove todos os elementos
+print(l)
+l = ['a','b','c','b']
+l.remove('b') # remove a primeira ocorrência 
+print(l)
+l.pop() # remove o último elemento
+print(l)
+l += ['e','f','g'] # soma e atribuição também está implementado
+print(l)
+l.pop(1) # remove o elemento na posição 1
+print(l)
+l = [1,4,2,6,4]
+l.sort() # ordena
+print(l)
+l2 = l.copy() # cria uma copia
+print(l2)
+print(l.count(4)) # número de ocorrências do número 4 na lista
+```
+
+## 3. Strings
+
+Strings também são consideradas sequências em Python e portanto, possuem diversos comportamentos em comum com tuplas e listas. Assim como tuplas, strings são imutáveis.
+
+O uso básico de strings é mostrado a seguir. Para mais detalhes da interface pública da classe `str`, digite `help(str)` em um terminal.
+
+```python
+s = "alo"
+print(type(s)) # str
+print(s[0]) # acessa primeiro caractere da string
+s2 = "alo mundo Python"
+print(s2.count(' ')) # conta espaços em branco na string
+#s2[2] = 'a' # erro: string é imutável
+s2 += "!" # concatena string com uma outra
+print(s2)
+```
+
+## 4. Dicionários
+
+Aleḿ das classes que representam sequências, Python também possui o tipo dicionário. Apesar de não ser considerado uma sequência, esta classe possui alguma similaridade com as sequências.
+
+- Tipo de dados `dict`
+- Utilizado para armazenar vários pares formados por uma chave e um valor
+- Definido pela especificação de vários pares `chave: valor` separados por vírgula entre chaves `{}`
+- Exemplos de dicionários:
+    - `d1 = {0: 'zero', 1: 'um', 2: 'dois'}`
+    - `d2 = {'zero': 0, 'um': 1, 'dois': 2}`
+    - `d3 = {'zero': 0, 1: [1,2,3], 'c': (3.0, -3.0)}`
+- O acesso aos seus elementos se dá com o uso da chave entre colchetes
+
+Observe como se trabalha com dicionários em Python a seguir.
+
+```python
+d = {1:'um', 2:'dois', 3:'três'} # declara um dicionário
+print(type(d)) #dict
+print(d[2])
+d[4] = 'quatro' # adiciona novo par chave (4) -> valor ('quatro')
+print(d)
+d[1] = 'one' # podemos alterar o valor de uma chave
+print(d)
+```
+
+Os dicionários são muito úteis para acessar informações indexadas por uma chave. Observe a seguir.
+
+```python
+class Pessoa:
+    '''Definição de uma Pessoa'''
+    def __init__(self, cpf, nome, fone):
+        self.cpf = cpf
+        self.nome = nome
+        self.fone = fone
+        
+    def __str__(self):
+        # esta forma de formatar string funciona com Python versão > 3.6
+        return f'cpf={self.cpf}, nome={self.nome}, fone={self.fone}'
+        #return 'cpf={}, nome={}, fone={}'.format(self.cpf, self.nome, self.fone)
+
+if __name__ == "__main__":
+    # cria objetos da classe Pessoa
+    P1 = Pessoa('11111-1', 'carlos', '12345')
+    P2 = Pessoa('22222-2', 'mario', '54321')
+    P3 = Pessoa('33333-3', 'joão', '133245')
+
+    pessoas = {} # cria um dicionário
+    pessoas[P1.cpf] = P1 # chave: cpf, valor: pessoa
+    pessoas[P2.cpf] = P2
+    pessoas[P3.cpf] = P3
+
+    cpf = '22222-2'
+    if cpf in pessoas:
+        print(f'Pessoa: {pessoas[cpf]}')
+    else:
+        print('CPF não cadastrado')
+```
+
+## 5. Operações comuns em estruturas de dados
+
+Todos os tipos de sequências apresentados suportam um conjunto comum de operações. Estas operações são dadas pela forma de acesso aos objetos das sequências, formas de se iterar nos objetos contidos nas sequências e a funções/operadores utilitários que recebem sequências como parâmetros.
+
+### Acesso a posições das sequências
+
+Sendo `s` seja uma sequência (`tuple`, `list` ou `str`):
+
+- `s[0]` acessa o primeiro elemento de `s`, `s[1]` o segundo e assim por diante
+- `s[-1]` acessa o último elemento de `s`, `s[-2]` o penúltimo e assim por diante
+- Caso o índice `i` em `s[i]` seja maior ou igual ao total de elementos, ocorre um erro de execução
+
+### Fatiamento (*slicing*)
+
+Sendo `s` seja uma sequência (`tuple`, `list` ou `str`):
+
+- É possível realizar o seu "fatiamento":
+    - `s[2:5]`: retorna os elementos de índice 2, 3 e 4
+    - `s[i:j]`: retorna os elementos de índice `i` até `j-1`
+    - `s[i:]`: retorna os elementos de índice `i` até o último índice da sequência
+    - `s[:i]`: retorna os elementos do primeiro índice até o índice `i-1`
+    - `s[i:j:d]`: retorna os elementos de índice `i` até `j-1` com incremento de `d`
+    - `s[::]`: retorna todos os elementos
+    - `s[::-1]`: retorna todos os elementos na ordem inversa
+
+```python
+s = ('x', 'y', 'z', 1, 2, 3, 'a', 'b', 'c')
+print(s[1:3]) # seq. com objetos nas posições 1 e 2
+print(s[-1]) # objeto na última posição
+print(s[-1:1:-1]) # seq. com objetos nas posições 8, 7, 6... até 2
+```
+
+### Outras funções em sequências
+
+Sequências em Python também possuem funções especiais que as recebem como parâmetro (estas funções também funcionam em dicionários):
+
+- `len`: retorna o tamanho de uma sequência/dicionário
+- `in`: operador (e não função) que retorna verdadeiro caso um objeto pertença à sequência/chaves de um dicionário
+- `max`: retorna o maior valor da sequência/chaves de um dicionário (os objetos precisam ter o mesmo tipo)
+- `min`: retorna o menor valor da sequência/chaves de um dicionário (os objetos precisam ter o mesmo tipo)
+- `sum`: retorna o somatório da sequência/chaves de um dicionário (se eles tiverem tipo numérico)
+- `any`: retorna verdadeiro se algum valor da sequência/chaves de um dicionário tiver valor lógico `True`
+- `all`: retorna verdadeiro se todos os valores da sequência/chaves de um dicionário tiverem valor lógico `True`
+
+```python
+s = [1, 2, 3]
+print(len(s))
+print(5 in s)
+print(max(s))
+print(min(s))
+print(sum(s))
+print(any(s))
+s = [0, 2, 3]
+print(all(s))
+d = {1: 'um', 2: 'dois', 3: 'tres'}
+print(sum(d)) # opera nas chaves do dicionário
+```
+
+### Percorrendo os elementos de uma sequência
+
+Sequências em Python podem ser percorridas (iteradas) de diversas maneiras, como mostrado a seguir.
+
+```python
+l = ['a','b','c']
+
+# 1. Estilo c++ 
+for i in range(len(l)): # range é uma função que cria um intervalo de valores
+    print(l[i], end='-') # end é o caractere a ser impresso no final (padrão, \n)
+print('\n============================')
+
+# Lembre o Zen de Python... "Beautiful is better than ugly."
+# 2. com o operador 'in' -> a variável do laço recebe cada objeto da sequência diretamente
+for i in l:
+    print(i, end='-')    
+print('\n============================')    
+
+# 3. função enumerate: retorna uma enumeração (tuplas formadas por (posição, valor))
+for e in enumerate(l):
+    print(e, end='-')
+print('\n============================')    
+
+#Uso comum
+for (i,v) in enumerate(l):
+    print('posição={}, valor={}'.format(i, v))
+```
+
+```python
+d = {1: 'um', 2: 'dois', 3: 'tres', 4: 'quatro', 5: 'cinco'}
+
+# percorre todas as chaves
+for c in d.keys(): # mesma coisa se só usar d
+    print(c)
+
+# percorre todos os valores
+for v in d.values():
+    print(v)
+    
+# percorre todos pares chave/valor
+for c, v in d.items(): # mesma coisa se usar enumerate(d)
+    print('chave: {}, valor: {}'.format(c,v))
+```
+
+## Extra: `Iterators` e `Generators`
+
+### Iteradores
+
+Em linguagens orientadas a objetos, é comum utilizar objetos especiais, chamados de **iteradores** (*iterators*), para percorrer suas estruturas de dados.
+
+Em Python, é possível utilizar as função `next`, que retorna o próximo elemento ou resulta no erro de execução `StopIteration` quando não houver mais elementos (mais na frente estudaremos o mecanismo de erros e exceções).
+
+Para isto, você deve primeiramente criar um objeto do tipo `iter` passando um objeto iterável (sequência ou dicionário) no construtor.
+
+```python
+t = ('a','b','c')
+it = iter(t) # objeto iterador da tupla t 
+print(next(it)) # 'a'
+print(next(it)) # 'b'
+print(next(it)) # 'c'
+#next(it) # este next resulta em erro
+```
+
+### Generators
+
+Um outro comando muito útil em Python é o `yield`. Este comando, ao ser utilizado em uma função ao invés de um `return`, faz com que a função se torne um objeto especial chamado de `generator`.
+
+Desta forma, uma chamada à função gera um objeto iterável. Ao ser utilizada a função especial `next` neste objeto, um valor de retorno é produzido, mas a função "se lembra" onde estava (guarda o seu estado) para produzir o resultado correto em uma próxima chamada.
+
+Observe um exemplo de `generator` que retorna, sob demanda, a sequência de Fibonacci.
+
+```python
+# gera a sequência Fibonacci sob demanda
+def fib(n):
+    '''n >= 2 é o número de elementos a serem gerados'''
+    a = b = 1 # sim, isso funciona em Python
+    yield a # gera o primeiro valor
+    yield b # gera o segundo valor
+
+    # gera os outros valores
+    for i in range(n-2):
+        s = a + b
+        yield s
+        # atualiza a e b
+        a,b = b, s # atribuição simultânea
+
+if __name__ == "__main__":
+    for x in fib(10): # chamada de função gera um iterável (generator)
+        print(x) # laço itera e imprime todos os valores produzidos
+
+    type(fib(10)) # função se torna um objeto generator
+    
+    #seq = fib(10) # alternativa: seq é o generator, que é um iterável
+    #print(next(seq)) # chamar função next no iterável gerado
+    #print(next(seq))
+    #print(next(seq))
+```
