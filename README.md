@@ -1239,3 +1239,261 @@ if __name__ == "__main__":
     #print(next(seq))
     #print(next(seq))
 ```
+
+# Aula - Relacionamento entre Classes
+
+## Atributos (`self._a` vs `self.__a`)
+
+Nos exemplos a seguir, os atributos privados estão definidos como  `self._nome` (em lugar de `self.__nome`). Isto é apenas uma convenção Python informando que usuários da classe não devem acessar estes atributos diretamente, já que no caso de `_`, Python não muda o nome dos atributos e portanto, ele continua podendo ser acessado fora da classe. Veja a seguir.
+
+```jsx
+class Test1:
+    def __init__(self, v):
+        # Utilizando _v
+        self._v = v
+        
+class Test2:
+    def __init__(self, v):
+        # Utilizando __V
+        self.__v = v
+        
+if __name__ == "__main__":
+    t1 = Test1(3)
+    print(t1._v) # podemos (mas não devemos!) acessar _v
+    
+    t2 = Test2(3)
+    #print(t2.__v) #Erro!
+    print(t2._Test2__v) #porém podemos (mas não devemos!) accessar __v utilizando o nome da classe.
+    
+```
+
+Você pode utilizar a convenção de utilizar apenas um underscore sempre que não for necessário implementar gets/sets para os atributos.
+
+## 1. Associação
+
+Associação é o tipo mais genérico de relacionamento entre classes em POO.
+
+Um exemplo é o mostrado a seguir, no qual uma `ContaBancaria` possui uma `Pessoa` como titular.
+
+```jsx
+class Pessoa:
+    '''Pessoa com nome e CPF'''
+    def __init__(self, nome, cpf):
+        self._nome = nome
+        self._cpf = cpf
+        
+    @property
+    def nome(self):
+        '''Get para _nome'''
+        return self._nome
+
+    @property
+    def cpf(self):
+        '''Get para _cpf'''
+        return self._cpf
+    
+    def __str__(self):
+        return f'{self._cpf}, {self._nome}'
+
+class ContaBancaria:
+    '''Uma conta bancaria com titular'''
+    def __init__(self, tit, num, saldo):
+        self._titular = tit # relação ContaBancaria - Pessoa
+        self._numero = num
+        self._saldo = saldo
+        
+    def __str__(self):
+        return f'Titular: {self._titular}. Num: {self._numero}. Saldo: R$ {self._saldo}'
+    
+    @property
+    def saldo(self):
+        '''Get para _saldo'''
+        return self._saldo
+
+    def deposita(self, valor):
+        '''Depositar $valor na conta'''
+        if valor <= 0 :
+            print('Valor não válido')
+        else:
+            self._saldo += valor
+
+    def saca(self, valor):
+        '''Sacar $valor da conta'''
+        if self._saldo < valor:
+            print('Saldo insuficiente')
+        else:
+            self._saldo -= valor
+            
+    def transfere(self, conta2, valor):
+        if valor <= 0 or self._saldo < valor:
+            print('Transferência não válida')
+        else:
+            conta2.deposita(valor)
+            self.saca(valor)
+            
+if __name__ == "__main__":
+    p1 = Pessoa('João', '111222333-45')
+    # note que p1 é utilizando para construir a conta c1
+    c1 = ContaBancaria(p1, 11, 500.0)
+    print(c1)
+    c1.deposita(100.0)
+    c1.saca(50.0)
+    print(c1)
+
+    p2 = Pessoa('Maria', '2232223-43')
+    c2 = ContaBancaria(p2, 12, 2000)
+    c2.transfere(c1, 100)
+    print(c1)
+    print(c2)
+```
+
+## 2. Agregação
+
+Em POO, agregação é uma relação fraca entre as partes que compõem um todo. Em outras palavras, as partes e o todo podem existir independentemente.
+
+A relação entre `Carro`, `Motor` e `Roda`, implementada a seguir, é um exemplo de agregação.
+
+```jsx
+class Motor:
+    '''Um motor (potencia e número de cilindros)'''
+    
+    def __init__(self, pot, cil):
+        self._pot = pot
+        self._cil = cil
+        self._ligado = False
+
+    def liga(self):
+        '''Ligar o motor'''
+        self._ligado = True
+        
+    def desliga(self):
+        '''Desligar o motor'''
+        self._ligado = False
+        
+    @property
+    def ligado(self):
+        '''Get para _ligado'''
+        return self._ligado
+        
+    def __str__(self):
+        # um exemplo do operador ternário (retorna "rrrmm" se self._ligado == True)
+        som = 'rrrrmm' if self._ligado else ''
+        return f'Potencia: {self._pot} {som}'            
+
+class Roda:
+    '''Uma Roda'''
+    
+    def __init__(self, aro):
+        self._aro = aro
+        self._girando = False
+    
+    def gira(self):
+        '''começar a girar'''
+        self._girando = True
+    
+    def para(self):
+        '''parar de girar'''
+        self._girando = False
+            
+    def __str__(self):
+        return 'Girando' if self._girando else 'Stop'
+    
+class Carro:
+    '''Um carro'''
+    
+    def __init__(self, marca, modelo, motor, rodas):
+        self._marca = marca 
+        self._modelo = modelo
+        self._motor = motor # relação com motor
+        self._rodas = rodas # relação com as 4 rodas -> lista de objetos da classe Roda
+
+    def liga(self):
+        '''Liga o carro'''
+        self._motor.liga() # utiliza os métodos públicos de Motor
+            
+    def desliga(self):
+        '''Desliga o carro'''
+        self.para() # parar as rodas
+        self._motor.desliga() # utiliza os métodos públicos de Motor
+            
+        
+    def anda(self):
+        '''As rodas começam a girar'''
+        if not self._motor.ligado: # atributo (público) do motor
+            print('Primeiro deve ligar o carro')
+        else:
+            for r in self._rodas:
+                r.gira() # método público da classe Roda
+                    
+    def para(self):
+        '''Freio'''
+        for r in self._rodas:
+            r.para() # método público da classe Roda
+                
+    def __str__(self):
+        s = f'Carro {self._marca}. Motor: {self._motor}.'
+        for (i, r) in enumerate(self._rodas):
+            s += f'\nRoda {i+1}. {r}' # concatenação de Strings
+        
+        return s
+            
+if __name__ == "__main__":
+    ## Criar as partes dos carros            
+    m = Motor(200, 4)
+    r1 = Roda(16)
+    r2 = Roda(16)
+    r3 = Roda(18)
+    r4 = Roda(18)
+
+    # Criar o carro com as suas partes
+    c = Carro('Honda', 'Civic', m, [r1,r2,r3,r4])
+    print(c)
+    print('------')
+    c.liga()
+    print(c)
+    print('------')
+    c.anda()
+    print(c)
+    print('------')
+    c.para()
+    print(c)
+    print('------')
+    c.desliga()
+    print(c)
+    print('------')
+```
+
+# 3. Composição
+
+Composição em POO é uma relação forte entre as partes que compõem um todo, isto é, o todo não existe sem as partes. A relação entre `Predio` e `Sala` implementada a seguir é um exemplo de composição.
+
+```jsx
+class Sala:
+    '''Uma sala'''
+    
+    def __init__(self, numero, empresa):
+        self._numero = numero
+        self._empresa = empresa # empresa é um código
+        
+    def __str__(self):
+        return f'Num: {self._numero} Empresa: {self._empresa}'
+
+class Predio:
+    '''Um prédio com várias salas'''
+    
+    def __init__(self, endereco, quant_salas):
+        self._endereco = endereco
+        self._salas = []
+        for i in range(quant_salas):
+            # criando (utilizando o inicializador) as Salas
+            self._salas.append(Sala(i+1, 100+i))
+
+    def __str__(self):
+        r = f'Endereço: {self._endereco}. '
+        for s in self._salas:
+            r += '\n' + str(s)
+        return r
+
+p = Predio('Av. Eng. Roberto Freire', 10)
+print(p)
+```
