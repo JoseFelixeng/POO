@@ -1497,3 +1497,126 @@ class Predio:
 p = Predio('Av. Eng. Roberto Freire', 10)
 print(p)
 ```
+
+
+# Aula - Módulos em Python
+
+## 1. Módulos em Python
+
+Um módulo em Python é um conjunto de constantes, funções e classes contidos em um ou mais arquivos `.py`.
+
+Módulos podem ser importados por um programa (similar ao `#include` de C++).
+
+Em Python, um módulo é um sinônimo de biblioteca.
+
+### 1.1 Importação de Módulos
+
+Observe um exemplo a seguir de importação de módulos e uso de constantes e funções definidas dentro do módulo.
+
+```python
+import math # modulo da biblioteca padrão Python
+print(math.e) # constante de Euler
+print(math.sqrt(16)) # raiz quadrada
+```
+
+Observe que para ser utilizados, os objetos importados do módulo precisam do prefixo com nome do módulo `math`.
+
+Alternativamente, você pode omitir o nome do módulo/prefixo se importá-lo da seguinte forma. Ainda, você pode especificar o que deseja importar do módulo, como mostrado a seguir.
+
+```python
+from math import e, sqrt
+print(e)
+print(sqrt(16))
+```
+
+### 1.2 Informações Sobre Módulos
+
+As funções Python `help` e `dir` podem ser utilizadas para obtermos mais informações sobre módulos.
+
+Isto é mostrado a seguir.
+
+```python
+import math
+dir(math) # função Python que retorna uma lista
+          # com todas as strings que são nomes de funções, constantes e
+          # classes presentes no módulo
+import math
+help(math) # imprime ajuda do módulo
+```
+
+### 1.3 Implementando os seus Próprios Módulos
+
+Em Python, todo arquivo `.py` é considerado um módulo.
+Então, uma vez que você programa um arquivo `.py`, ele pode
+ser importado por qualquer outro programa Python
+
+### 1.4 Importando os seus Próprios Módulos
+
+Baixe o arquivo [alo.py](https://raw.githubusercontent.com/ect-info/POO_2021.2/master/docs/07-modulos/alo.py)e o insira na mesma pasta que o arquivo deste notebook.
+
+O código do arquivo é o seguinte:
+
+```
+def dois():
+ '''Função que retorna 2'''
+ return 2
+
+class Alo:
+ '''Classe ainda não implementada'''
+ pass
+
+def f():
+    '''Funcao ainda nao implementada'''
+    pass
+
+if __name__ == '__main__':
+    # O código a seguir só é executado se este arquivo
+    # for executado no terminal.
+    # Ou seja, caso este arquivo seja importado, o
+    # código a seguir não é executado.
+    print('Executando o módulo alo.py')
+    x = dois()
+    print(f'Retorno da função dois: {x}')
+
+```
+
+Após fazer isto, você consegue importá-lo e trabalhar com ele, como no código a seguir.
+
+```python
+#alo.py
+def dois():
+ '''Função que retorna 2'''
+ return 2
+
+class Alo:
+ '''Classe ainda não implementada'''
+ pass
+
+def f():
+    '''Funcao ainda nao implementada'''
+    pass
+
+if __name__ == '__main__':
+    # O código a seguir só é executado se este arquivo
+    # for executado no terminal.
+    # Ou seja, caso este arquivo seja importado, o
+    # código a seguir não é executado.
+    print('Executando o módulo alo.py')
+    x = dois()
+    print(f'Retorno da função dois: {x}')
+```
+
+```python
+import alo # importa todo o arquivo alo.py
+
+help(alo) # imprime a ajuda do módulo
+
+# usa o módulo: 
+
+o1 = alo.Alo() # cria objeto
+alo.dois() # (chama função)
+```
+
+Observe que o trecho de código que pertence ao `if __name__ == '__main__':` não é executado.
+
+Isto é esperado, já que este `if` serve justamente para executar o bloco de código nele presente somente se o arquivo `alo.py` for diretamente executado em um terminal Python (e não se ele for importado).
