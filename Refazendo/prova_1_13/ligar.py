@@ -6,7 +6,7 @@ class Robo:
     def __init__(self, nome):
         '''Inicializa um Robo'''
         self._nome = nome
-        self._posicao = [0,0]
+        self._posicao = [0.0,0.0]
         self.em_op = False
 
     @property
@@ -23,11 +23,10 @@ class Robo:
 
 
     def distancia(self, nova):
-        return math.sqrt((self._posicao[0]+nova[0])**2 + (self._posicao[1]+nova[1]**2))
+        return math.sqrt((self._posicao[0] - nova[0])**2 + ((self._posicao[1] - nova[1])**2))
 
     def move(self, nova):
-        self._posicao.clear()
-        self._posicao.append(nova)
+        self._posicao = list(nova)
 
     def __str__(self):
         if not self.em_op :
@@ -44,9 +43,12 @@ class SistemaMultiRobos:
         for i in range(quantidade):
             self._robos.append(Robo(f'{i}'))
 
-
     def _acha_robo_ocioso(self):
-        pass
+        for robo in self._robos:
+            if not robo.em_op:
+                return robo
+
+        return None
 
     def imprime_robos(self):
         s = '----------------- \n' + 'Robôs do sistema: \n'
@@ -55,15 +57,15 @@ class SistemaMultiRobos:
         print(s + '--------------------------- \n')
 
     def despacha(self, coordenadas):
-        for i in self._robos:
-            if not i.em_op:
-                print(f'Robô{i.nome} livre')
-                print(f'Despachando Robo{i.nome} para ({coordenadas}).')
-                print(f'Distancia até o alvo: {i.distancia(coordenadas)} \n')
-                i.em_op == True
-                i._posicao = coordenadas
-            else:
-                print('Os robos já estão trabalhando')
+        robo = self._acha_robo_ocioso()
+        if robo:
+            print(f'Robô{robo.nome} livre')
+            print(f'Despachando Robo{robo.nome} para ({coordenadas}).')
+            print(f'Distancia até o alvo: {robo.distancia(coordenadas)} \n')
+            robo.em_op = True
+            robo.move(coordenadas)
+        else:
+            print('Os robos já estão trabalhando')
 
 
 
